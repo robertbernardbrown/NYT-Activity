@@ -1,0 +1,21 @@
+.jumbotron{
+    background:rgb(31, 0, 31);
+    color: white;
+}
+
+h1{
+    font-family: "Calibri";
+    font-weight: bold;
+}
+
+#panel-1, #panel-2{
+    background: black;
+    color: white;
+    font-weight: bold;
+}
+
+#search-button, #clear-button{
+    background: gray;
+    color: white;
+    font-weight: bold;
+}
