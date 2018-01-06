@@ -20,6 +20,8 @@ Text Editor - VS Studio
 ## Site Preview
 ![alt text](https://github.com/robertbernardbrown/NYT-Activity/blob/master/screenshot.png)
 
+![alt text](https://github.com/robertbernardbrown/NYT-Activity/blob/master/screenshot2.png)
+
 ## Future Development
 
 * Add more features with Javascript
