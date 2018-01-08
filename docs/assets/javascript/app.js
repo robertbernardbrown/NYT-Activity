@@ -1,84 +1,84 @@
 $(document).ready(function(){
   var searchTerms = "";
-  var numRecs = 0;
-  var startYear = 0;
-  var endYear = 0;
+  var numRecs = "";
+  var startYear = "";
+  var endYear = "";
 
   function articleSearch() {
+    var url = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
+    url += '?' + $.param({
+      'api-key': "bdb59ae4073c4dd2a76b63604b28c1ec",
+      'q': searchTerms,
+    });
 
+    /* Need to consider optional parameters. */
+    /* Years will be "" if not set by user on form (optional). */
+    url = (startYear === "") ? url : url += '&begin_date=' + startYear + '0101';
+    url = (endYear === "") ? url : url += '&end_date=' + endYear + '1231';
+    
+    console.log(url);
 
-      var url = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
-      url += '?' + $.param({
-        'api-key': "bdb59ae4073c4dd2a76b63604b28c1ec",
-        'q': searchTerms,
-        'begin_date': startYear + "0101",
-        'end_date': endYear + "1231",
-      });
-                  $.ajax({
-                    url: url,
-                    method: 'GET',
-                  }).done(function(result) {
+    $.ajax({
+      url: url,
+      method: 'GET',
+    }).done(function(result) {
 
-                  var article = result.response.docs;
-                  console.log(url);
+      console.log(result);
 
-                          if (numRecs === "1") {
-                            console.log("hello")
-                            console.log(article[0].headline.main);
-                            var title =  article[0].headline.main;
-                            var byLine =  article[0].byline.original;
+      clear(); /* Need to clear previous search if not done by user. */
 
-                            var  articleDiv = $("<div>").addClass("well");
+      var article = result.response.docs;
 
-                            var titleHtml = $('<h3>').text(title);
-                            var byLineHtml =  $('<p>').text(byLine);
+      var intNumRecs = parseInt(numRecs);
 
-                            $(articleDiv).append(titleHtml);
-                              $(articleDiv).append(byLineHtml);
-                            $("#article-body").prepend(articleDiv);
-                          }
+      for (var i = 0; i < intNumRecs ; i++) {
+        var title   = article[i].headline.main;
+        var byLine  = "";
+        var section = "null";
+        var pubDate = article[i].pub_date;
+        var webUrl  = article[i].web_url;
 
-                          else if (numRecs === "5") {
-                            for (var i = 0; i < 5; i++) {
-                            console.log(article[i].headline.main);
-                            var  title =  article[i].headline.main;
-                            var  byLine =  article[i].byline.original;
+        byLine = (typeof article[i].byline === 'undefined') ?
+                 byLine : /* initialized to empty string */
+                 article[i].byline.original;
 
-                            var  articleDiv = $("<div>").addClass("well");
+        section = (typeof article[i].section_name === 'undefined') ?
+                 section : /* initialized to "null" string */
+                 article[i].section_name;
 
-                            var titleHtml = $('<h3>').text(title);
-                            var byLineHtml =  $('<p>').text(byLine);
+        console.log(title);
+        console.log(byLine);
+        console.log(section);
+        console.log(pubDate);
+        console.log(webUrl);
 
-                            $(articleDiv).append(titleHtml);
-                              $(articleDiv).append(byLineHtml);
-                            $("#article-body").prepend(articleDiv);
+        var  articleDiv = $('<div>').addClass('well');
 
-                            }
-                          }
-                          else if (numRecs === "10") {
-                            for (var i = 0; i < 10; i++) {
-                              console.log(article[i].headline.main);
-                          var title =  article[i].headline.main;
-                              var byLine =  article[i].byline.original;
+        var titleHtml = $('<h3>').text(title);
+        $(articleDiv).append(titleHtml);
+  
+        if (byLineHtml !== "") {
+          var byLineHtml =  $('<p>').text(byLine);
+          $(articleDiv).append(byLineHtml);
+        }
 
-                              var  articleDiv = $("<div>").addClass("well");
+        var sectionHtml =  $('<p>').text('Section: ' + section);
+        $(articleDiv).append(sectionHtml);
 
-                              var titleHtml = $('<h3>').text(title);
-                              var byLineHtml =  $('<p>').text(byLine);
+        var pubDateHtml = $('<p>').text(pubDate);
+        $(articleDiv).append(pubDateHtml);
 
-                              $(articleDiv).append(titleHtml);
-                                $(articleDiv).append(byLineHtml);
-                              $("#article-body").prepend(articleDiv);
+        var webUrlLink = $('<a>').text(webUrl)
+                                 .attr('href', webUrl)
+                                 .attr('target', "_blank");
+        $(articleDiv).append(webUrlLink);
 
-                            }
-                          }
-
-                  }).fail(function(err) {
-                    throw err;
-                  });
-
+        $("#article-body").prepend(articleDiv);
       }
-
+    }).fail(function(err) {
+      throw err;
+    });
+  }
 
   function search(){
     event.preventDefault();
@@ -94,7 +94,6 @@ $(document).ready(function(){
     console.log(endYear);
 
     articleSearch();
-
   }
 
   function clear() {

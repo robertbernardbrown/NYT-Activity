@@ -8,6 +8,10 @@ h1{
     font-weight: bold;
 }
 
+a {
+    color: green;
+}
+
 #panel-1, #panel-2{
     background: black;
     color: white;
