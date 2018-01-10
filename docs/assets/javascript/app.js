@@ -54,7 +54,8 @@ $(document).ready(function(){
 
         var  articleDiv = $('<div>').addClass('well');
 
-        var titleHtml = $('<h3>').text(title);
+        var labelHtml = $('<label>').addClass('label label-primary').text(i+1);
+        var titleHtml = $('<h3>').text(title).prepend(labelHtml);
         $(articleDiv).append(titleHtml);
   
         if (byLineHtml !== "") {
@@ -73,7 +74,7 @@ $(document).ready(function(){
                                  .attr('target', "_blank");
         $(articleDiv).append(webUrlLink);
 
-        $("#article-body").prepend(articleDiv);
+        $("#article-body").append(articleDiv);
       }
     }).fail(function(err) {
       throw err;
